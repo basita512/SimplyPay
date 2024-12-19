@@ -2,14 +2,17 @@ const express = require('express')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
 const zod = require('zod')
-const { User } = require('../Database/db')
+const { User, Account } = require('../Database/db')
 const {JWT_SECRET} = require('../config')
+const authMiddleware = require('../middleware')
 
-const app = express()
-app.use(express.json())
-const schema = zod.array(zod.number())
+// const app = express()
+// app.use(express.json())
+// const schema = zod.array(zod.number())
 
-// When user Sign-up
+
+//----------------------- When user Sign-up ------------------------
+ 
 const signUpBody = zod.object({
     email : zod.string().email(),
     firstName : zod.string(),
@@ -17,7 +20,7 @@ const signUpBody = zod.object({
     password : zod.string().min(8),
 })
 
-app.post('/sign-up', async(req, res) => {
+router.post('/sign-up', async(req, res) => {
     const response = signUpBody.safeParse(req.body)
 
     // Wrong Inputs check
@@ -48,6 +51,12 @@ app.post('/sign-up', async(req, res) => {
     })
     const userId = user._id
 
+    // Adding random balance on new account
+    await Account.create({
+        userId,
+        balance : 1 + Math.random()*10000
+    })
+
     const token = jwt.sign({userId}, JWT_SECRET)
     res.json({
         message: 'User created successfully',
@@ -56,13 +65,15 @@ app.post('/sign-up', async(req, res) => {
 })
 
 
-// When user sign-in
+
+//------------------------------ When user sign-in-----------------------------------
+
 const signInBody = zod.object({
     username : req.body.username,
     password : req.body.password
 })
 
-app.post('/sign-in', async(req, res) => {
+router.post('/sign-in', async(req, res) => {
     //const userLogin = req.body.userLogin
     const response = signInBody.safeParse(userLogin)
 
@@ -91,7 +102,61 @@ app.post('/sign-in', async(req, res) => {
     res.status(411).json({
         message: 'Error while logging in'
     })
+})
 
+
+
+//------------------ When user wants to update details-----------------------
+
+const updateBody = zod.object({
+    password : zod.string().optional(),
+    firstName : zod.string().optional(),
+    lastName : zod.lastName().optional()
+})
+
+router.put('/', authMiddleware, async(req, res) => {
+    const response = updateBody.safeParse(req.body)
+
+    if(!response.success){
+        res.status(411).json({
+            message : 'Error while updating the information'
+        })
+    }
+    
+    await User.updateOne({ _id : req.userId }, req.body)
+
+    res.json({
+        message : 'Updated successfully'
+    })
+})
+
+
+
+//------------------------ When we need to get users from backend via filtering last/first name ------------------
+
+router.get('/search', async(req, res) => {
+    const filter = req.query.filter || ""
+
+    const users = await User.find({
+        $or : [{
+            firstName : {
+                '$regex' : filter
+            }, 
+        }, {
+            lastName : {
+                '$regex' : filter
+            }
+        }]
+    })
+
+    res.json({
+        user : users.map( user => ({
+            username : user.username,
+            firstName : user.firstName,
+            lastName : user.lastName,
+            _id : user._id
+        }))
+    })
 })
 
 module.exports = router
