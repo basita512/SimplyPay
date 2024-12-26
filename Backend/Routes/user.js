@@ -93,16 +93,31 @@ router.post('/sign-in', async(req, res) => {
             })
         }
         
+        //Finding user by username
         const user = await User.findOne({
             username : req.body.username,
-            password : req.body.password
         })
-        const userId = user._id
 
-        // If user exists
+        // If username not found
+        if (!user) {
+            return res.status(404).json({
+                message : 'Username does not exist'
+            })
+        }
+
+        //Check if the password matches
+        if (user.password !== req.body.password) {
+            return res.status(401).json({
+                message : 'Incorrect password'
+            })
+        }
+
+        // If username and password are correct
+        const userId = user._id
         if (user) {
             const token = jwt.sign({userId}, JWT_SECRET)
             res.json({
+                message : 'Logged In successfully',
                 token : token
             })
             return

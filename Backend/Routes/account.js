@@ -26,41 +26,63 @@ router.post('/transfer', authMiddleware, async(req, res) => {
     // Initializing a session
     const session = await mongoose.startSession()
 
-    //Starting the session
-    session.startTransaction()
-    const { amount, to } = req.body
+    try {
+        //Starting the session
+        session.startTransaction()
+        const { to, amount } = req.body
 
-    //Fetching the SENDER account
-    const fromAccount = await Account.findOne({ userId: req.userId }).session(session)
+        //Fetching the SENDER account
+        const fromAccount = await Account.findOne({ userId: req.userId }).session(session)
 
-    // If SENDER has insufficient balance
-    if (!fromAccount || fromAccount.balance < amount) {
-        await session.abortTransaction()
-        return res.status(400).json({
-            message: 'Insufficient Balance'
+        // If SENDER has insufficient balance
+        if (!fromAccount || fromAccount.balance < amount) {
+            await session.abortTransaction()
+            return res.status(400).json({
+                message: 'Insufficient Balance'
+            })
+        }
+
+        //Fetching the RECIEVER account
+        const toAccount = await Account.findOne({ userId: to }).session(session)
+
+        //Checking if RECIEVER account is valid account
+        if(!toAccount) {
+            await session.abortTransaction()
+            return res.status(400).json({
+                message : 'Invalid Account'
+            })
+        }
+
+        //Performing the Transfer
+        await Account.updateOne(
+            {userId : req.userId}, 
+            { $inc: { balance : -amount} },
+            { session }
+        )
+
+        await Account.updateOne(
+            { userId: to},
+            { $inc: { balance : amount } },
+            { session }
+        )
+
+        //Commit the Transaction in DB
+        await session.commitTransaction()
+        res.json({
+            message : 'Transfer successful'
         })
+
+    } catch (error) {
+        await session.abortTransaction(); // Abort transaction on error
+        res.status(500).json({ 
+            message: 'Transfer failed',
+            error: error.message 
+        });
+
+    } finally {
+        session.endSession(); // Always end the session
     }
-
-    //Fetching the RECIEVER account
-    const toAccount = await Account.findOne({ userId: to }).session(session)
-
-    //Checking if RECIEVER account is valid account
-    if(!toAccount) {
-        await session.abortTransaction()
-        return res.status(400).json({
-            message : 'Invalid Account'
-        })
-    }
-
-    //Performing the Transfer
-    await Account.updateOne({userId : req.userId}, { $inc: {balance : -amount}}).session(session)
-    await Account.updateOne({ userId: to}, { $inc: {balance : amount}}).session(session)
-
-    //Commit the Transaction in DB
-    await session.commitTransaction()
-    res.json({
-        message : 'Transfer successful'
-    })
+    
 })
 
 module.exports = router
