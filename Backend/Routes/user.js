@@ -6,7 +6,6 @@ const { User, Account } = require('../Database/db')
 const {JWT_SECRET} = require('../config')
 const authMiddleware = require('../middleware')
 
-// app.use(express.json())
 
 
 //----------------------- When user Sign-up ------------------------
@@ -24,8 +23,6 @@ router.post('/sign-up', async(req, res) => {
 
         // Wrong Inputs check
         if(!response.success) {
-            // console.log(response)
-            console.log('Validation errors:', JSON.stringify(response.error.issues, null, 2));
             return res.status(411).json({
                 message: 'Incorrect Inputs',
                 errors: response.error.issues,
@@ -34,7 +31,7 @@ router.post('/sign-up', async(req, res) => {
     
         // Existing User check
         const existingUser = await User.findOne({
-            username : req.body.email
+            username : req.body.username
         })
     
         if (existingUser) {
