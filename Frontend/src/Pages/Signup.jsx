@@ -55,7 +55,8 @@ const Signup = () => {
                     label={'Password'}
                     name='password'
                     value={signUpData.password}
-                    onChange={handleSignUpData} />
+                    onChange={handleSignUpData}
+                    type={'password'} />
 
                 <Button 
                     label={'Sign Up'}/>
