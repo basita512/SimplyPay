@@ -4,8 +4,10 @@ import SubHeading from '../Components/SubHeading'
 import InputBox from '../Components/InputBox'
 import BottomWarning from '../Components/BottomWarning'
 import Button from '../Components/Button'
+import { useNavigate } from 'react-router-dom'
 
 const Signup = () => {
+    const navigate = useNavigate()
     const [signUpData, setSignUpData] = useState({
         firstname: "",
         lastname: "",
@@ -57,9 +59,19 @@ const Signup = () => {
                     value={signUpData.password}
                     onChange={handleSignUpData}
                     type={'password'} />
-
+                
                 <Button 
-                    label={'Sign Up'}/>
+                    label={'Sign Up'}
+                    onClick={async () => {
+                        const response = await axios.post('http://localhost:3000/api/v1/user/signup', {
+                            firstname,
+                            lastname,
+                            username,
+                            password
+                        })
+                        localStorage.setItem('token', response.data.token)
+                        navigate('/dashboard')
+                    }}/>
 
                 <BottomWarning label={'Already have an account?'} bottomText={'Login'} to={'/signin'} />
             </div>
