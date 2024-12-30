@@ -14,7 +14,7 @@ const InputBox = ({label, placeholder, onChange, value, name, type}) => {
         value={value}
         name={name}
         type={type}
-        className=' w-full outline-none border-2 rounded-md border-gray-300 placeholder-gray-500 py-2 px-3 mt-1' />
+        className=' w-full outline-none focus:border-[#4a9a74f6] border-2 rounded-md border-gray-300 placeholder-gray-500 py-2 px-3 mt-1' />
     </div>
   )
 }
