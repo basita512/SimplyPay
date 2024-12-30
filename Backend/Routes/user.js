@@ -23,7 +23,7 @@ router.post('/sign-up', async(req, res) => {
 
         // Wrong Inputs check
         if(!response.success) {
-            return res.status(411).json({
+            return res.status(409).json({
                 message: 'Incorrect Inputs',
                 errors: response.error.issues,
             })
