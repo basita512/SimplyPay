@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import Button from './Button'
 
 const Users = () => {
     const [Users, setUsers] = useState([])
+    const [filter, setFilter] = useState()
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/v1/user/search')
+                const response = await axios.get(`http://localhost:3000/api/v1/user/search?filter=${filter}`)
                 setUsers(response.data.user)
 
             } catch (error) {
@@ -17,7 +17,7 @@ const Users = () => {
             }
         }
         fetchUsers()
-    }, [])
+    }, [filter])
 
     return (
         <div className='mt-8'>
@@ -28,7 +28,9 @@ const Users = () => {
             <input 
                 type="text"
                 placeholder='Search users...'
-                
+                onChange={(event) => {
+                    setFilter(event.target.value)
+                }}
                 className=' w-full outline-none focus:border-[#1b1717aa] border-2 rounded-md border-gray-300 placeholder-gray-500 py-2 px-3 mt-1' />
 
             <div className="">
@@ -58,7 +60,9 @@ const SingleUser = ({user}) => {
 
             <div className="">
                 <button className='py-2 px-6 font-medium text-white bg-black rounded-md mt-5 '
-                    onClick={() => (navigate('/send'))}>
+                    onClick={() => {
+                        navigate(`/send?id=${user._id}&FIRSTNAME=${firstName}&LASTNAME=${lastName}`)
+                    }}>
                     Send Money
                 </button>
             </div>
