@@ -1,6 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import Button from './Button'
 
 const Users = () => {
+    const [Users, setUsers] = useState([])
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/v1/user/search')
+                setUsers(response.data.user)
+
+            } catch (error) {
+                console.log('Error fetching users:', error)
+            }
+        }
+        fetchUsers()
+    }, [])
+
     return (
         <div className='mt-8'>
             <div className="text-lg font-medium">
@@ -11,7 +29,40 @@ const Users = () => {
                 type="text"
                 placeholder='Search users...'
                 
-                className=' w-full outline-none border-2 rounded-md border-gray-300 placeholder-gray-500 py-2 px-3 mt-1' />
+                className=' w-full outline-none focus:border-[#1b1717aa] border-2 rounded-md border-gray-300 placeholder-gray-500 py-2 px-3 mt-1' />
+
+            <div className="">
+                {Users.map(
+                    user => <SingleUser user={user}/>
+                )}
+            </div>
+        </div>
+    )
+}
+
+const SingleUser = ({user}) => {
+    const navigate = useNavigate()
+    return (
+        <div className="flex justify-between">
+            <div className="right flex space-x-4 items-center mt-5">
+                <div className="user rounded-full bg-gray-300 text-black h-12 w-12">
+                    <div className="flex justify-center mt-2 font-normal  text-xl">
+                        {user.firstName[0]}
+                    </div>
+                </div>
+
+                <div className="hello text-lg">
+                    {user.firstName} {user.lastName}
+                </div>
+            </div>
+
+            <div className="">
+                <button className='py-2 px-6 font-medium text-white bg-black rounded-md mt-5 '
+                    onClick={() => (navigate('/send'))}>
+                    Send Money
+                </button>
+            </div>
+            
         </div>
     )
 }
