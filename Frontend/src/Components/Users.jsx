@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 const Users = () => {
     const [Users, setUsers] = useState([])
-    const [filter, setFilter] = useState()
+    const [filter, setFilter] = useState('')
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -34,14 +34,18 @@ const Users = () => {
                 className=' w-full outline-none focus:border-[#1b1717aa] border-2 rounded-md border-gray-300 placeholder-gray-500 py-2 px-3 mt-1' />
 
             <div className="">
-                {Users.map(
-                    user => <SingleUser user={user}/>
-                )}
+                {
+                    Users.length > 0 ? (
+                        Users.map( user => <SingleUser key={user._id} user={user} />)
+                    ) : (
+                        <div className="text-gray-500 mt-4">No users found.</div>
+                    )
+                }
             </div>
         </div>
     )
 }
-
+ 
 const SingleUser = ({user}) => {
     const navigate = useNavigate()
     return (
@@ -61,7 +65,7 @@ const SingleUser = ({user}) => {
             <div className="">
                 <button className='py-2 px-6 font-medium text-white bg-black rounded-md mt-5 '
                     onClick={() => {
-                        navigate(`/send?id=${user._id}&FIRSTNAME=${firstName}&LASTNAME=${lastName}`)
+                        navigate(`/send?id=${user._id}&FIRSTNAME=${user.firstName}&LASTNAME=${user.lastName}`)
                     }}>
                     Send Money
                 </button>

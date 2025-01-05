@@ -1,7 +1,14 @@
-import React from 'react'
-import InputBox from '../Components/InputBox'
+import React, { useState } from 'react'
+import { useSearchParams } from 'react-router-dom';
+import axios from "axios";
 
 const SendMoney = () => {
+    const [searchParams] = useSearchParams()
+    const id = searchParams.get('id')
+    const fname = searchParams.get('FIRSTNAME')
+    const lname = searchParams.get('LASTNAME')
+    const [amount, setAmount] = useState(0) 
+
     return (
         <div className='bg-gradient-to-b from-[#29a699f6] via-[#83d4aef6] to-[#bcffe0f6] h-screen w-full flex flex-col justify-center items-center'>
             <div className="card flex flex-col bg-white py-2 px-7 rounded-xl shadow-lg shadow-[#2c635df6] w-[450px] h-max">
@@ -12,12 +19,12 @@ const SendMoney = () => {
                 <div className="right flex space-x-4 items-center mt-16">
                     <div className="user rounded-full bg-green-900 text-white h-12 w-12">
                         <div className="flex justify-center mt-2 font-normal  text-xl">
-                            A
+                            {fname[0].toUpperCase()}
                         </div>
                     </div>
 
                     <div className="hello text-xl">
-                        Friend's Name
+                        {fname} {lname}
                     </div>
                 </div>
 
@@ -34,12 +41,25 @@ const SendMoney = () => {
                             id="amount"
                             name="amount"
                             placeholder="0.00"
+                            onChange={(event) => {
+                                setAmount(event.target.value)
+                            }}
                             className="text-5xl rounded-md font-semibold text-gray-800 pl-10 pr-4 py-2 border-b-2 border-gray-300 focus:outline-none focus:border-green-500 w-full text-center"
                         />
                     </div>
                 </div>
 
-                <button className='py-2 bg-green-900 hover:bg-green-950 duration-300 font-medium text-center mt-10 mb-4 w-full text-white rounded-lg'>
+                <button className='py-2 bg-green-900 hover:bg-green-950 duration-300 font-medium text-center mt-10 mb-4 w-full text-white rounded-lg'
+                    onClick={() => {
+                        axios.post('http://localhost:3000/api/v1/account/transfer', {
+                            to : id,
+                            amount : amount
+                        }, {
+                            headers : {
+                                Authorization: 'Bearer ' + localStorage.getItem('token')
+                            }
+                        })
+                    }}>
                     Initate Transfer
                 </button>
             </div>
