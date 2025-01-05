@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useSearchParams } from 'react-router-dom';
 import axios from "axios";
+import FailedTransaction from '../Components/FailedTransaction';
+import Success from '../Components/SuccessfulTransaction'
 
 const SendMoney = () => {
     const [searchParams] = useSearchParams()
@@ -8,6 +10,29 @@ const SendMoney = () => {
     const fname = searchParams.get('FIRSTNAME')
     const lname = searchParams.get('LASTNAME')
     const [amount, setAmount] = useState(0) 
+    const [success, setSuccess] = useState(false)
+    const [error, setError] = useState(false)
+
+    const handleTransfer = () => {
+        axios.post('http://localhost:3000/api/v1/account/transfer', {
+            to: id,
+            amount: amount
+        }, {
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem('token')
+            }
+        })
+        .then(() => {
+            setSuccess({ amount, receiver: `${fname} ${lname}` });
+        })
+        .catch(() => {
+            alert('Transfer Failed. Please try again.'); 
+        });
+    };
+
+    if (success) {
+        return <Success amount={success.amount} receiver={success.receiver} />;
+    }
 
     return (
         <div className='bg-gradient-to-b from-[#29a699f6] via-[#83d4aef6] to-[#bcffe0f6] h-screen w-full flex flex-col justify-center items-center'>
@@ -49,19 +74,15 @@ const SendMoney = () => {
                     </div>
                 </div>
 
-                <button className='py-2 bg-green-900 hover:bg-green-950 duration-300 font-medium text-center mt-10 mb-4 w-full text-white rounded-lg'
-                    onClick={() => {
-                        axios.post('http://localhost:3000/api/v1/account/transfer', {
-                            to : id,
-                            amount : amount
-                        }, {
-                            headers : {
-                                Authorization: 'Bearer ' + localStorage.getItem('token')
-                            }
-                        })
-                    }}>
-                    Initate Transfer
-                </button>
+                { success && <Success/> }
+                { error && <FailedTransaction/> }
+
+                { !success && !error && (
+                    <button className='py-2 bg-green-900 hover:bg-green-950 duration-300 font-medium text-center mt-10 mb-4 w-full text-white rounded-lg'
+                        onClick={handleTransfer}>
+                        Initate Transfer
+                    </button>
+                )}               
             </div>
         </div>
     )
