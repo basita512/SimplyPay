@@ -26,12 +26,15 @@ const SendMoney = () => {
             setSuccess({ amount, receiver: `${fname} ${lname}` });
         })
         .catch(() => {
-            alert('Transfer Failed. Please try again.'); 
+            setError(true)
         });
     };
 
     if (success) {
         return <Success amount={success.amount} receiver={success.receiver} />;
+    } 
+    if (error) {
+        return <FailedTransaction amount={error.amount} receiver={error.receiver} />
     }
 
     return (
@@ -74,8 +77,8 @@ const SendMoney = () => {
                     </div>
                 </div>
 
-                { success && <Success/> }
-                { error && <FailedTransaction/> }
+                {/* { success && <Success/> }
+                { error && <FailedTransaction/> } */}
 
                 { !success && !error && (
                     <button className='py-2 bg-green-900 hover:bg-green-950 duration-300 font-medium text-center mt-10 mb-4 w-full text-white rounded-lg'
