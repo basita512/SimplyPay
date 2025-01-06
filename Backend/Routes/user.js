@@ -137,7 +137,7 @@ const updateBody = zod.object({
     lastName : zod.string().optional()
 })
 
-router.put('/', authMiddleware, async(req, res) => {
+router.put('/update', authMiddleware, async(req, res) => {
     try {
         const response = updateBody.safeParse(req.body)
 
@@ -197,6 +197,32 @@ router.get('/search', async(req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
     
+})
+
+
+
+/**--------------------------Signed-In user endpoint-------------------------- */
+
+router.get('/me', authMiddleware, async (req, res) => {
+    try{
+        const signedInUser = await User.findById(req.userId)
+
+        if(!signedInUser) {
+            return res.status(404).json({
+                message : 'User not found'
+            })
+        }
+        res.json({
+            id: signedInUser._id,
+            firstName: signedInUser.firstName,
+            lastName: signedInUser.lastName,
+            username: signedInUser.username,
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Server error', error: error.message
+        })
+    }
 })
 
 module.exports = router
