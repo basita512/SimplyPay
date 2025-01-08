@@ -1,22 +1,23 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Heading from '../Components/Heading'
 import SubHeading from '../Components/SubHeading'
 import InputBox from '../Components/InputBox'
 import Button from '../Components/Button'
 import BottomWarning from '../Components/BottomWarning'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import ErrorAlert from '../Components/ErrorAlert'
+import { AppContext } from '../Context/AppContext'
 
 const Signin = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPasswprd] = useState('')
-    const [errorType, setErrorType] = useState('')
-    const [errorMessage, setErrorMessage] = useState('')
-    const navigate = useNavigate()
+    const {
+        email, setEmail,
+        password, setPassword,
+        errorMessage, setErrorMessage,
+        navigate, handleApiError
+    } = useContext(AppContext)
 
     const handleSignIn = async(event) => {
         event.preventDefault()
-        setErrorType('')
         setErrorMessage('')
 
         try {
@@ -26,37 +27,10 @@ const Signin = () => {
             })
 
             localStorage.setItem('token', response.data.token)
-            
-            setErrorType('success')
-            setErrorMessage('Logged In succesfully')
             navigate('/dashboard')
 
         } catch (error) {
-            if(error.response && error.response.data) {
-                const apiMessage = error.response.data.message
-
-                if (apiMessage === 'Invalid ID and Password') {
-                    setErrorType('error')
-                    setErrorMessage('Please enter valid Email Id')
-
-                } else if(apiMessage === 'Email does not exist') {
-                    setErrorType('error')
-                    setErrorMessage('User does not exist. Please check your email')
-
-                } else if (apiMessage === 'Incorrect password'){
-                    setErrorType('error')
-                    setErrorMessage('Invalid password. Please try again.')
-                
-                } else {
-                    setErrorType('error')
-                    setErrorType(apiMessage || 'Login failed. pLease try again.')
-                }
-            
-            } else {
-                console.log('Error during sign-in', error)
-                setErrorType('error')
-                setErrorMessage('Something went wrong. Please try again later')
-            }
+            handleApiError(error, setErrorMessage)
         }
     }
 
@@ -77,19 +51,9 @@ const Signin = () => {
                     label={'Password'}
                     type={'password'}
                     value={password}
-                    onChange={(e) => {setPasswprd(e.target.value)}}/>
+                    onChange={(e) => {setPassword(e.target.value)}}/>
 
-                {
-                    errorMessage && (
-                        <div className={`mt-4 py-2 w-full text-center text-sm rounded ${
-                            errorType === 'success' ? 
-                                'bg-green-100 text-green-700'
-                                : 'bg-red-100 text-red-700'
-                        }`}>
-                            {errorMessage}
-                        </div>
-                    )
-                }
+                { errorMessage && <ErrorAlert errorMessage={errorMessage} /> }
 
                 <Button 
                     label={'Sign In'}

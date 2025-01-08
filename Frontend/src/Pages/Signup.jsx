@@ -1,50 +1,64 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Heading from '../Components/Heading'
 import SubHeading from '../Components/SubHeading'
 import InputBox from '../Components/InputBox'
 import BottomWarning from '../Components/BottomWarning'
 import Button from '../Components/Button'
-import { useNavigate } from 'react-router-dom'
+import ErrorAlert from '../Components/ErrorAlert'
 import axios from 'axios'
+import { AppContext } from '../Context/AppContext'
 
 const Signup = () => {
-    const navigate = useNavigate()
-    const [signUpData, setSignUpData] = useState({
-        firstname: "",
-        lastname: "",
-        email: "",
-        password: "",
-    })
+    const {
+        firstname, setFirstname,
+        lastname, setLastname,
+        email, setEmail,
+        password, setPassword,
+        errorMessage, setErrorMessage,
+        navigate, handleApiError 
+    } = useContext(AppContext)
 
     const handleSignUpData = (event) => {
-        const {name, value} = event.target
-        setSignUpData((prevData) => {
-            return {
-                ...prevData,
-                [name] : value
-            }
-        })
+        const { name, value } = event.target
+        switch (name) {
+            case 'firstname' : 
+                setFirstname(value)
+                break
+            case 'lastname' : 
+                setLastname(value)
+                break
+            case 'email' : 
+                setEmail(value)
+                break
+            case 'password' : 
+                setPassword(value)
+                break
+            default :
+                break
+        }
     }
 
-    const handleSigUp = async () => {
+    const handleSigUp = async (event) => {
+        event.preventDefault()
+        setErrorMessage('')
+
         try {
-            if (!signUpData.firstname || !signUpData.lastname || !signUpData.email || !signUpData.password) {
-                alert("Please fill out all fields.");
-                return;
+            if (!firstname || !lastname || !email || !password) {
+                setErrorMessage("Please fill out all fields.")
+                return
             }
 
             const response = await axios.post('http://localhost:3000/api/v1/user/sign-up', {
-                username : signUpData.email,
-                password : signUpData.password,
-                firstName : signUpData.firstname,
-                lastName : signUpData.lastname
+                username : email,
+                password : password,
+                firstName : firstname,
+                lastName : lastname
             })
             localStorage.setItem('token', response.data.token)
             navigate('/dashboard')
-            
+
         } catch (error) {
-            console.error("Signup error:", error);
-            alert("Signup failed. Please try again.");
+             handleApiError(error, setErrorMessage)  
         }                     
     }
 
@@ -58,30 +72,33 @@ const Signup = () => {
                 <InputBox 
                     label={'First Name'} 
                     name='firstname'
-                    value={signUpData.firstname}
+                    value={firstname}
                     placeholder={'John'} 
                     onChange={handleSignUpData} />
 
                 <InputBox 
                     label={'Last Name'} 
                     name='lastname'
-                    value={signUpData.lastname}
+                    value={lastname}
                     placeholder={'Doe'} 
                     onChange={handleSignUpData} />
 
                 <InputBox 
                     label={'Email'} 
                     name='email'
-                    value={signUpData.email}
+                    value={email}
                     placeholder={'youremail@example.com'} 
                     onChange={handleSignUpData} />
 
                 <InputBox 
                     label={'Password'}
                     name='password'
-                    value={signUpData.password}
+                    value={password}
                     onChange={handleSignUpData}
                     type={'password'} />
+
+                
+                { errorMessage && <ErrorAlert errorMessage={errorMessage} /> }
                 
                 <Button 
                     label={'Sign Up'}
