@@ -26,6 +26,28 @@ const Signup = () => {
         })
     }
 
+    const handleSigUp = async () => {
+        try {
+            if (!signUpData.firstname || !signUpData.lastname || !signUpData.email || !signUpData.password) {
+                alert("Please fill out all fields.");
+                return;
+            }
+
+            const response = await axios.post('http://localhost:3000/api/v1/user/sign-up', {
+                username : signUpData.email,
+                password : signUpData.password,
+                firstName : signUpData.firstname,
+                lastName : signUpData.lastname
+            })
+            localStorage.setItem('token', response.data.token)
+            navigate('/dashboard')
+            
+        } catch (error) {
+            console.error("Signup error:", error);
+            alert("Signup failed. Please try again.");
+        }                     
+    }
+
     return (
         <div className='bg-gradient-to-b from-[#29a699f6] via-[#83d4aef6] to-[#bcffe0f6] h-screen w-full flex flex-col justify-center items-center'>
             <div className="card flex flex-col justify-center items-center bg-white py-2 px-7 rounded-xl shadow-xl shadow-[#3c7b74f6] w-90 h-max  ">
@@ -63,26 +85,7 @@ const Signup = () => {
                 
                 <Button 
                     label={'Sign Up'}
-                    onClick={async () => {
-                        try {
-                            if (!signUpData.firstname || !signUpData.lastname || !signUpData.email || !signUpData.password) {
-                                alert("Please fill out all fields.");
-                                return;
-                            }
-
-                            const response = await axios.post('http://localhost:3000/api/v1/user/sign-up', {
-                                username : signUpData.email,
-                                password : signUpData.password,
-                                firstName : signUpData.firstname,
-                                lastName : signUpData.lastname
-                            })
-                            localStorage.setItem('token', response.data.token)
-                            navigate('/dashboard')
-                        } catch (error) {
-                            console.error("Signup error:", error);
-                            alert("Signup failed. Please try again.");
-                        }                     
-                    }}/>
+                    onClick={handleSigUp}/>
 
                 <BottomWarning label={'Already have an account?'} bottomText={'Login'} to={'/signin'} />
             </div>

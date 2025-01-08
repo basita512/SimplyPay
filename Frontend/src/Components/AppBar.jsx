@@ -1,8 +1,10 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const AppBar = () => {
     const [loginUser, setLoginUser] = useState(null)
+    const navigate = useNavigate()
     
     useEffect(() => {
         const fetchSignedInUser = async () => {
@@ -16,7 +18,6 @@ const AppBar = () => {
                     }
                 }) 
                 setLoginUser(response.data)
-                console.log('Full API Response:', response); // Debug full response
                 console.log('Response Data:', response.data); 
                 
             } catch (error) {
@@ -27,7 +28,15 @@ const AppBar = () => {
         fetchSignedInUser()
     }, [])
 
-    
+    const handleSignOut = () => {
+        try {
+            localStorage.removeItem('token')
+            navigate('/signin')
+
+        } catch (error) {
+            console.log('Error signing out: ', error)
+        }
+    }
 
     return (
         <div className='flex bg-white justify-between h-20 p-4 rounded-full shadow-lg shadow-gray-300'>
@@ -45,7 +54,15 @@ const AppBar = () => {
                         {loginUser?.firstName?.[0] || 'X'}
                     </div>
                 </div>
+
+                <button
+                    onClick={handleSignOut}
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                >
+                    Sign Out
+                </button>
             </div>
+
         </div>
     )
 }

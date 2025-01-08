@@ -39,7 +39,7 @@ const SendMoney = () => {
 
     return (
         <div className='bg-gradient-to-b from-[#29a699f6] via-[#83d4aef6] to-[#bcffe0f6] h-screen w-full flex flex-col justify-center items-center'>
-            <div className="card flex flex-col bg-white py-2 px-7 rounded-xl shadow-lg shadow-[#2c635df6] w-[450px] h-max">
+            <div className="card flex flex-col bg-white py-2 px-7 rounded-xl shadow-xl shadow-[#2c635df6] w-[450px] h-max">
                 <h1 className='text-4xl text-center font-bold pt-6'>
                     Send Money
                 </h1>
