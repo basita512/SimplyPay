@@ -6,7 +6,7 @@ const authMiddleware = (req, res, next) => {
 
     //Condition if the header doesn't starts with 'Bearer'
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status.json({
+        return res.status(401).json({
             error: 'Invalid Token'
         })
     }
