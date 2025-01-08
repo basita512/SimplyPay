@@ -12,7 +12,7 @@ export const AppContextProvider = ({children}) => {
     const navigate = useNavigate()
 
 
-    const handleApiError = (error, setErrorMessage, setErrorType) => {
+    const handleApiError = (error, setErrorMessage) => {
         if(error.response && error.response.data) {
             const apiMessage = error.response.data.message
 
@@ -38,7 +38,7 @@ export const AppContextProvider = ({children}) => {
         }
     }
 
-    
+
     const value = {
         email, setEmail,
         password, setPassword,
