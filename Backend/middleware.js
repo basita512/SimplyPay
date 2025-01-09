@@ -25,5 +25,18 @@ const authMiddleware = (req, res, next) => {
     }
 }
 
-module.exports = 
-    authMiddleware
+
+const restrictAuthPages = (req, res, next) => {
+    const token = req.headers.authorization
+
+    if (token) {
+        return res.status(403).json({
+            message : 'You are already logged in'
+        })
+    }
+    next()
+}
+
+module.exports = {
+    authMiddleware, restrictAuthPages
+}

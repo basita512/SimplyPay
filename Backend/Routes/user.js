@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const zod = require('zod')
 const { User, Account } = require('../Database/db')
 const {JWT_SECRET} = require('../config')
-const authMiddleware = require('../middleware')
+const { authMiddleware, restrictAuthPages } = require('../middleware')
 
 
 
@@ -17,7 +17,7 @@ const signUpBody = zod.object({
     lastName : zod.string(),
 })
 
-router.post('/sign-up', async(req, res) => {
+router.post('/sign-up', restrictAuthPages, async(req, res) => {
     try {
         const response = signUpBody.safeParse(req.body)
 
@@ -79,7 +79,7 @@ const signInBody = zod.object({
     password : zod.string()
 })
 
-router.post('/sign-in', async(req, res) => {
+router.post('/sign-in', restrictAuthPages, async(req, res) => {
     try {
         const response = signInBody.safeParse(req.body)
 
