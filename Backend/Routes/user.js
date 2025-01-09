@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const zod = require('zod')
 const { User, Account } = require('../Database/db')
 const {JWT_SECRET} = require('../config')
-const { authMiddleware, restrictAuthPages } = require('../middleware')
+const { authMiddleware, restrictAuthPages } = require('../middleware');
 
 
 

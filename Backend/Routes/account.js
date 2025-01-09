@@ -1,5 +1,5 @@
 const express = require('express')
-const authMiddleware = require('../middleware')
+const {authMiddleware} = require('../middleware')
 const {Account} = require('../Database/db')
 const mongoose = require('mongoose')
 
