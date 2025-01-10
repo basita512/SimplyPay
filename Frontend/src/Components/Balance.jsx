@@ -25,22 +25,10 @@ const Balance = () => {
         fetchBalance()
     }, [])
 
-    // return (
-    //     <div className='flex flex-col space-x-3 items-center'>
-    //         <div className="font-medium text-xl">
-    //             Your Balance 
-    //         </div> 
-
-    //         <div className="font-bold text-5xl ">
-    //             Rs {balance.toFixed(2)}
-    //         </div>
-    //     </div>
-    // )
-
     return (
         <div className="flex flex-col items-center justify-center bg-gray-100 p-4">
             <div className="bg-white shadow-xl shadow-gray-300 rounded-lg p-6 max-w-sm w-1/4 text-center">
-                <div className="flex items-center justify-center text-blue-500 text-5xl font-bold mb-2">
+                <div className="flex items-center justify-center text-blue-900 text-5xl font-bold mb-2">
                    <AccountBalanceWalletIcon fontSize="large" />
                 </div>
                 <div className="text-gray-500 font-medium text-lg">Your Balance</div>

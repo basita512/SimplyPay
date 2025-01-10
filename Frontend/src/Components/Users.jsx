@@ -9,8 +9,11 @@ const Users = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
+                const loggedInUser = localStorage.getItem('userId')
                 const response = await axios.get(`http://localhost:3000/api/v1/user/search?filter=${filter}`)
-                setUsers(response.data.user)
+                
+                const filteredUsers = response.data.user.filter(user => user._id !== loggedInUser)
+                setUsers(filteredUsers)
 
             } catch (error) {
                 console.log('Error fetching users:', error)
@@ -20,7 +23,7 @@ const Users = () => {
     }, [filter])
 
     return (
-        <div className='mt-8'>
+        <div className='py-8'>
             <div className="text-lg font-medium">
                 Users
             </div>

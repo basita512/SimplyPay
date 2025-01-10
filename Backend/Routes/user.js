@@ -112,10 +112,11 @@ router.post('/sign-in', restrictAuthPages, async(req, res) => {
         // If username and password are correct
         const userId = user._id
         if (user) {
-            const token = jwt.sign({userId}, JWT_SECRET)
+            const token = jwt.sign({ userId }, JWT_SECRET)
             res.json({
                 message : 'Logged In successfully',
-                token : token
+                token : token,
+                userId : userId
             })
             return
         }

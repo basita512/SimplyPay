@@ -9,6 +9,7 @@ export const AppContextProvider = ({children}) => {
     const [firstname, setFirstname] = useState('')
     const [lastname, setLastname] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
+    const [isEditingProfile, setIsEditingProfile] = useState(false)
     const navigate = useNavigate()
 
 
@@ -39,13 +40,19 @@ export const AppContextProvider = ({children}) => {
     }
 
 
+    const handleEditProfile = () => setIsEditingProfile(true)
+    const handleCancelEditProfile = () => setIsEditingProfile(false)
+
     const value = {
         email, setEmail,
         password, setPassword,
         firstname, setFirstname,
         lastname, setLastname,
         errorMessage, setErrorMessage,
-        navigate, handleApiError
+        navigate, handleApiError,
+        isEditingProfile, setIsEditingProfile,
+        handleEditProfile, handleCancelEditProfile
+
     }
 
     return <AppContext.Provider value={value}>
