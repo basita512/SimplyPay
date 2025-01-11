@@ -10,7 +10,7 @@ const Dashboard = () => {
 
     return (
         <div className='bg-gray-100 w-full min-h-screen'>
-            <div className="app-bar pt-6 mx-6">
+            <div className="app-bar pt-6 mx-6 sticky top-0 z-50">
                 <AppBar/>
             </div>
             

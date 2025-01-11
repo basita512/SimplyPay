@@ -7,6 +7,7 @@ import BottomWarning from '../Components/BottomWarning'
 import axios from 'axios'
 import ErrorAlert from '../Components/ErrorAlert'
 import { AppContext } from '../Context/AppContext'
+import Title from '../Components/Title'
 
 const Signin = () => {
     const {
@@ -37,6 +38,7 @@ const Signin = () => {
 
     return (
         <div className='bg-gradient-to-b from-[#29a699f6] via-[#83d4aef6] to-[#bcffe0f6] h-screen w-full flex flex-col justify-center items-center'>
+            <Title/>
             <div className="card flex flex-col justify-center items-center bg-white py-2 px-7 rounded-xl shadow-xl shadow-[#3c7b74f6] w-90 h-max  ">
                 <Heading label={'Sign In'} />
 

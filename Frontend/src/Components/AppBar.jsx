@@ -66,9 +66,10 @@ const AppBar = () => {
     }
 
     return (
-        <div className='flex bg-white justify-between h-20 p-4 rounded-full shadow-lg shadow-gray-300'>
-            <div className="left ml-6 text-2xl font-medium h-full flex flex-col justify-center">
-                SimplyPay
+        <div className='flex bg-white justify-between h-20 p-4 rounded-full shadow-lg shadow-gray-300 '>
+            <div className="left ml-6 text-2xl font-medium h-full flex space-x-4 justify-center">
+                <img src='../../public/logo.png' className='' alt="SimplyPay Logo" />
+                <p className='mt-2'>SimplyPay</p>
             </div>
 
             <div className="right flex space-x-5 items-center">
