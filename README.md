@@ -39,12 +39,6 @@ Please do not use this for real financial transactions.
 - JWT for authentication
 - Zod for validation
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (v14 or higher)
-- MongoDB installed locally
-- Git
 
 ### Installation
 
@@ -91,24 +85,6 @@ cd Frontend
 npm run dev
 ```
 
-## 📱 Application Structure
-
-```
-Simpli-Pay/
-├── Frontend/
-│   ├── src/
-│   │   ├── Components/
-│   │   ├── Pages/
-│   │   ├── Context/
-│   │   └── App.jsx
-│   └── package.json
-└── Backend/
-    ├── Routes/
-    ├── Database/
-    ├── middleware.js
-    └── main.js
-```
-
 ## 🔒 API Endpoints
 
 ### User Routes
@@ -130,10 +106,3 @@ Simpli-Pay/
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📝 License
-
-This project is open source and available under the MIT License.
-
-## 👥 Author
-
-- [@basita512](https://github.com/basita512)
