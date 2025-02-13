@@ -46,7 +46,7 @@ Please do not use this for real financial transactions.
 
 ```bash
 git clone https://github.com/basita512/Simpli-Pay.git
-cd Simpli-Pay
+cd SimplyPay
 ```
 
 2. Install Frontend Dependencies
