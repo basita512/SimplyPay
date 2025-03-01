@@ -2,7 +2,7 @@
 
 <div align="center">
   <img src="Frontend/public/logo.png" alt="SimplyPay Logo" width="200"/>
-  <p>A modern web application for seamless money transfers and wallet management.</p>
+  <p>A MERN application for seamless money transfers and wallet management.</p>
 </div>
 
 ## ⚠️ Disclaimer
@@ -23,22 +23,6 @@ Please do not use this for real financial transactions.
 - **User Search**: Find other users quickly with search functionality
 - **Profile Management**: Update your profile information
 - **Real-time Balance**: Track your wallet balance in real-time
-
-## 🛠️ Tech Stack
-
-### Frontend
-- React.js with Vite
-- Tailwind CSS for styling
-- Axios for API calls
-- React Router for navigation
-- Material UI Icons
-
-### Backend
-- Node.js & Express.js
-- MongoDB with Mongoose
-- JWT for authentication
-- Zod for validation
-
 
 ### Installation
 
